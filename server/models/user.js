@@ -43,7 +43,7 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateAuthToken = function () { // dipakai di server1
   var user = this;
   var access = 'auth';
-  var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
+  var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
   //user.tokens.push({access, token});
   user.tokens = user.tokens.concat([{access, token}]); // menggabungkan string
@@ -67,7 +67,7 @@ UserSchema.statics.findByToken = function(token){ // di pakai di authenticate
   var User = this;
   var decoded;
   try{
-    decoded= jwt.verify(token,'abc123');
+    decoded= jwt.verify(token, process.env.JWT_SECRET);
   }catch(e){
     // return new Promise((resolve, reject)=>{
     //   reject();
